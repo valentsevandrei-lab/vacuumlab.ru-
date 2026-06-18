@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VacuumLab — личная лаборатория технологических проектов</title>
+
+    <meta name="description" content="VacuumLab — личная лаборатория технологических проектов. Эксперименты с AI, инженерия, автоматизация, исследования." />
+    <meta name="robots" content="index, follow" />
+
+    <!-- ===== SCHEMA.ORG РАЗМЕТКА ===== -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "VacuumLab",
+            "description": "Личная лаборатория технологических проектов. Эксперименты с AI, инженерия, автоматизация.",
+            "url": "https://vacuumlab.ru",
+            "author": {
+                "@type": "Person",
+                "name": "Автор VacuumLab",
+                "sameAs": "https://b2btext.ru"
+            },
+            "foundingDate": "2013",
+            "about": {
+                "@type": "Thing",
+                "name": "Технологические проекты и исследования"
+            }
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Автор VacuumLab",
+            "url": "https://vacuumlab.ru",
+            "sameAs": [
+                "https://b2btext.ru",
+                "https://t.me/copy_for_b2b"
+            ],
+            "email": "info@b2btext.ru",
+            "knowsAbout": [
+                "Искусственный интеллект",
+                "Автоматизация",
+                "Инженерия",
+                "B2B-маркетинг",
+                "Технический копирайтинг"
+            ]
+        }
+    </script>
+
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СБРОСЫ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0f0e12;
+            color: #d1d5db;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ===== Шапка ===== */
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid #22222a;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #f1f5f9;
+            font-family: 'Georgia', serif;
+        }
+
+        .brand-year {
+            font-size: 0.7rem;
+            color: #4a4a55;
+            background: #1a1a22;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            border: 1px solid #2a2a35;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== Заголовок ===== */
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            color: #f1f5f9;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== Текст ===== */
+        .text-block {
+            margin-bottom: 1.5rem;
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .text-block .muted {
+            color: #8a8a9a;
+        }
+
+        .text-block strong {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        /* ===== Список ===== */
+        .topics {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 2rem 0;
+        }
+
+        .topics li {
+            padding: 0.3rem 0 0.3rem 1.5rem;
+            position: relative;
+            color: #b9c2d1;
+            font-size: 0.95rem;
+        }
+
+        .topics li::before {
+            content: "·";
+            position: absolute;
+            left: 0;
+            color: #a78bfa;
+            font-size: 1.6rem;
+            line-height: 1;
+            top: 0.1rem;
+        }
+
+        /* ===== Статус ===== */
+        .status-box {
+            background: #16161e;
+            border: 1px solid #22222a;
+            border-radius: 10px;
+            padding: 0.7rem 1.5rem;
+            margin: 2rem 0 2.2rem 0;
+            display: inline-block;
+        }
+
+        .status-box .status-text {
+            color: #8a8a9a;
+            font-size: 0.9rem;
+        }
+
+        .status-box .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6ee7b7;
+            margin-right: 0.6rem;
+            box-shadow: 0 0 10px rgba(110, 231, 183, 0.15);
+        }
+
+        /* ===== Мост на b2btext ===== */
+        .bridge {
+            margin: 1.8rem 0 1.5rem 0;
+            padding: 1.2rem 1.5rem;
+            background: #16161e;
+            border-radius: 10px;
+            border-left: 3px solid #a78bfa;
+        }
+
+        .bridge a {
+            color: #93bbfc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .bridge a:hover {
+            color: #b8d4ff;
+            text-decoration: underline;
+        }
+
+        .bridge .muted {
+            color: #8a8a9a;
+            font-size: 0.95rem;
+        }
+
+        /* ===== Контакт ===== */
+        .contact {
+            margin: 1.5rem 0 2.5rem 0;
+        }
+
+        .contact a {
+            color: #93bbfc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .contact a:hover {
+            color: #b8d4ff;
+            text-decoration: underline;
+        }
+
+        .contact .label {
+            color: #6a6a7a;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Футер ===== */
+        .footer {
+            margin-top: 2.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #1a1a22;
+            font-size: 0.75rem;
+            color: #4a4a55;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .footer a {
+            color: #6a6a7a;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .footer a:hover {
+            color: #8a8a9a;
+            text-decoration: underline;
+        }
+
+        /* ===== Мобилка ===== */
+        @media (max-width: 600px) {
+            body {
+                padding: 1.2rem;
+                justify-content: flex-start;
+                padding-top: 2.5rem;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .brand-name {
+                font-size: 1.3rem;
+            }
+
+            .bridge {
+                padding: 1rem 1.2rem;
+            }
+
+            .status-box {
+                padding: 0.6rem 1.2rem;
+            }
+
+            .topics li {
+                font-size: 0.9rem;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* ===== Анимация появления ===== */
+        .fade-in {
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards;
+        }
+        .fade-in:nth-child(2) { animation-delay: 0.1s; }
+        .fade-in:nth-child(3) { animation-delay: 0.2s; }
+        .fade-in:nth-child(4) { animation-delay: 0.3s; }
+        .fade-in:nth-child(5) { animation-delay: 0.4s; }
+        .fade-in:nth-child(6) { animation-delay: 0.5s; }
+        .fade-in:nth-child(7) { animation-delay: 0.6s; }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Шапка -->
+        <header class="brand fade-in">
+            <span class="brand-name">VacuumLab</span>
+            <span class="brand-year">с 2013</span>
+        </header>
+
+        <!-- Заголовок -->
+        <h1 class="hero-title fade-in">
+            Личная лаборатория<br />
+            <span class="highlight">технологических проектов</span>
+        </h1>
+
+        <!-- История -->
+        <div class="text-block fade-in">
+            <p>
+                Проект появился в <strong>2013 году</strong> как сайт о вакуумном оборудовании.<br />
+                Сейчас — личная лаборатория для экспериментов в области технологий.
+            </p>
+        </div>
+
+        <!-- Список: что будет -->
+        <div class="text-block fade-in">
+            <p style="margin-bottom: 0.3rem;">Здесь планируются публикации:</p>
+        </div>
+
+        <ul class="topics fade-in">
+            <li>эксперименты с AI и LLM;</li>
+            <li>инженерные и программные проекты;</li>
+            <li>автоматизация бизнес-процессов;</li>
+            <li>заметки, исследования и прототипы.</li>
+        </ul>
+
+        <!-- Статус -->
+        <div class="status-box fade-in">
+            <span class="dot"></span>
+            <span class="status-text">проект находится в стадии переосмысления</span>
+        </div>
+
+        <!-- Мост на b2btext -->
+        <div class="bridge fade-in">
+            <span class="muted">
+                Основной блог автора —
+                <a href="https://b2btext.ru" target="_blank">b2btext.ru</a>,
+                где уже публикуются материалы о B2B-маркетинге, контенте и искусственном интеллекте.
+            </span>
+        </div>
+
+        <!-- Контакт -->
+        <div class="contact fade-in">
+            <span class="label">По вопросам сотрудничества:</span>
+            <a href="mailto:info@b2btext.ru">info@b2btext.ru</a>
+        </div>
+
+        <!-- Футер -->
+        <footer class="footer fade-in">
+            <span>VacuumLab © 2013–2026</span>
+            <span>
+                <a href="https://b2btext.ru" target="_blank">b2btext.ru</a>
+            </span>
+        </footer>
+
+    </div>
+
+</body>
+</html>
