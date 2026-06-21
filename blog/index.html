@@ -4,39 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Анонсы статей — VacuumLab</title>
-
     <meta name="description" content="Анонсы статей из блога B2Btext.ru: технический копирайтинг, SEO, промышленность." />
     <meta name="robots" content="index, follow" />
-
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СБРОСЫ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ===== СТИЛИ (не трогать) ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #0f0e12;
             color: #d1d5db;
             line-height: 1.7;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             padding: 2rem 1.5rem;
         }
-
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* ===== ШАПКА ===== */
+        .container { max-width: 720px; margin: 0 auto; width: 100%; }
         .brand {
             display: flex;
             align-items: baseline;
@@ -45,7 +27,6 @@
             padding-bottom: 1.2rem;
             border-bottom: 1px solid #22222a;
         }
-
         .brand-name {
             font-size: 1.5rem;
             font-weight: 700;
@@ -54,11 +35,7 @@
             font-family: 'Georgia', serif;
             text-decoration: none;
         }
-
-        .brand-name:hover {
-            color: #a78bfa;
-        }
-
+        .brand-name:hover { color: #a78bfa; }
         .brand-year {
             font-size: 0.7rem;
             color: #4a4a55;
@@ -68,8 +45,6 @@
             border: 1px solid #2a2a35;
             letter-spacing: 0.3px;
         }
-
-        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
         .page-title {
             font-size: 2rem;
             font-weight: 700;
@@ -78,71 +53,67 @@
             margin-bottom: 0.5rem;
             color: #f1f5f9;
         }
-
         .page-title .highlight {
             background: linear-gradient(135deg, #a78bfa, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .page-subtitle {
             color: #8a8a9a;
             font-size: 0.95rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             border-left: 3px solid #a78bfa;
             padding-left: 1rem;
         }
-
-        /* ===== СПИСОК СТАТЕЙ ===== */
-        .articles-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
+        .articles-list { list-style: none; padding: 0; margin: 0; }
         .articles-list li {
-            padding: 0.8rem 0;
+            padding: 1.2rem 0;
             border-bottom: 1px solid #1a1a22;
+        }
+        .articles-list li:last-child { border-bottom: none; }
+        .article-header {
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
             gap: 0.5rem 1rem;
+            margin-bottom: 0.4rem;
         }
-
-        .articles-list li:last-child {
-            border-bottom: none;
-        }
-
         .article-date {
             color: #64748b;
             font-size: 0.8rem;
             min-width: 85px;
             font-variant-numeric: tabular-nums;
         }
-
         .article-title {
             color: #e2e8f0;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.05rem;
+            font-weight: 600;
             flex: 1;
         }
-
+        .article-title a {
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .article-title a:hover { color: #a78bfa; }
+        .article-excerpt {
+            color: #9aa3b3;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 0.3rem 0 0.5rem 0;
+        }
         .article-link {
             color: #93bbfc;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: 0.2s;
-            white-space: nowrap;
         }
-
         .article-link:hover {
             color: #b8d4ff;
             text-decoration: underline;
         }
-
-        /* ===== ССЫЛКА НА ГЛАВНУЮ ===== */
         .back-link {
             display: inline-block;
             margin-top: 2.5rem;
@@ -153,45 +124,15 @@
             font-size: 0.85rem;
             transition: 0.2s;
         }
-
-        .back-link:hover {
-            color: #a78bfa;
-        }
-
-        /* ===== МОБИЛКА ===== */
+        .back-link:hover { color: #a78bfa; }
         @media (max-width: 600px) {
-            body {
-                padding: 1.2rem;
-                justify-content: flex-start;
-                padding-top: 2rem;
-            }
-
-            .page-title {
-                font-size: 1.6rem;
-            }
-
-            .articles-list li {
-                flex-direction: column;
-                gap: 0.2rem;
-                padding: 0.6rem 0;
-            }
-
-            .article-date {
-                min-width: auto;
-                font-size: 0.7rem;
-            }
-
-            .article-title {
-                font-size: 0.95rem;
-            }
-
-            .article-link {
-                font-size: 0.8rem;
-                align-self: flex-start;
-            }
+            body { padding: 1.2rem; }
+            .page-title { font-size: 1.6rem; }
+            .article-header { flex-direction: column; gap: 0.2rem; }
+            .article-date { min-width: auto; font-size: 0.7rem; }
+            .article-title { font-size: 1rem; }
+            .article-excerpt { font-size: 0.88rem; }
         }
-
-        /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
         .fade-in {
             opacity: 0;
             animation: fadeUp 0.6s ease forwards;
@@ -200,7 +141,6 @@
         .fade-in:nth-child(3) { animation-delay: 0.2s; }
         .fade-in:nth-child(4) { animation-delay: 0.3s; }
         .fade-in:nth-child(5) { animation-delay: 0.4s; }
-
         @keyframes fadeUp {
             0% { opacity: 0; transform: translateY(10px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -211,13 +151,13 @@
 
 <div class="container">
 
-    <!-- Шапка -->
+    <!-- ===== ШАПКА (не трогать) ===== -->
     <header class="brand fade-in">
         <a href="/" class="brand-name">VacuumLab</a>
         <span class="brand-year">с 2013</span>
     </header>
 
-    <!-- Заголовок страницы -->
+    <!-- ===== ЗАГОЛОВОК СТРАНИЦЫ (не трогать) ===== -->
     <h1 class="page-title fade-in">
         Анонсы статей из <span class="highlight">B2Btext</span>
     </h1>
@@ -225,89 +165,160 @@
         Коротко о том, что появилось в основном блоге
     </p>
 
-    <!-- Список статей -->
+    <!-- ====================================================== -->
+    <!-- ===== НИЖЕ СПИСОК СТАТЕЙ ===== -->
+    <!-- ===== КОПИРОВАТЬ ЭТОТ БЛОК ДЛЯ КАЖДОЙ НОВОЙ СТАТЬИ ===== -->
+    <!-- ====================================================== -->
+
     <ul class="articles-list fade-in">
 
+  
+        <!-- === СТАТЬЯ 10 === -->
         <li>
-            <span class="article-date">21.06.2026</span>
-            <span class="article-title">Агентства комплексного маркетинга в промышленности</span>
-            <a href="https://b2btext.ru/blog/agentstva-kompleksnogo-marketinga-v-promyshlennosti/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">21.06.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/agentstva-kompleksnogo-marketinga-v-promyshlennosti/" target="_blank">Агентства комплексного маркетинга в промышленности</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Поговорил с владельцем завода, который работал с агентством «комплексного маркетинга».  Получилось очень познавательно.  Разобрал, почему большинству промышленных предприятий такие агентства приносят больше красивых отчётов, чем реальных клиентов. Квизы, прогревы, «лиды из Яндекса» — и почти ноль инженеров и снабженцев на выходе. Кто сейчас выбирает подрядчика или думает, куда тратить маркетинговый бюджет — рекомендую. 
+            </div>
+            <a href="https://b2btext.ru/blog/agentstva-kompleksnogo-marketinga-v-promyshlennosti/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 09 === -->
         <li>
-            <span class="article-date">14.06.2026</span>
-            <span class="article-title">Защита контента от ИИ-ботов</span>
-            <a href="https://b2btext.ru/blog/zashchita-kontenta-ot-ii-botov-2026/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">14.06.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/zashchita-kontenta-ot-ii-botov-2026/" target="_blank">Защита контента от ИИ-ботов</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Как заблокировать ИИ-ботов через robots.txt, почему это работает и какие сканеры всё равно лезут — разбор с реальными логами сервера.
+            </div>
+            <a href="https://b2btext.ru/blog/zashchita-kontenta-ot-ii-botov-2026/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 08 === -->
         <li>
-            <span class="article-date">07.06.2026</span>
-            <span class="article-title">НДС 22%: как мы убиваем малое машиностроение</span>
-            <a href="https://b2btext.ru/blog/nds-22-kak-my-svoimi-rukami-ubivaem-maloe-mashinostroenie/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">07.06.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/nds-22-kak-my-svoimi-rukami-ubivaem-maloe-mashinostroenie/" target="_blank">НДС 22%: как мы убиваем малое машиностроение</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Личные наблюдения производственника: почему повышение НДС до 22% убивает малое машиностроение и отдаёт рынок Китаю.
+            </div>
+            <a href="https://b2btext.ru/blog/nds-22-kak-my-svoimi-rukami-ubivaem-maloe-mashinostroenie/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 07 === -->
         <li>
-            <span class="article-date">31.05.2026</span>
-            <span class="article-title">Поддержка промышленного каталога статьями</span>
-            <a href="https://b2btext.ru/blog/podderzhka-promyshlennogo-kataloga-statyami/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">31.05.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/podderzhka-promyshlennogo-kataloga-statyami/" target="_blank">Поддержка промышленного каталога статьями</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Технический B2B-материал для раздела оборудования: объяснение технологии, перелинковка и работа с отраслевыми запросами без лишнего маркетинга.
+            </div>
+            <a href="https://b2btext.ru/blog/podderzhka-promyshlennogo-kataloga-statyami/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 06 === -->
         <li>
-            <span class="article-date">18.05.2026</span>
-            <span class="article-title">Проверка сканерами. Интерпретация данных</span>
-            <a href="https://b2btext.ru/blog/proverka-skannerami-oshibki-interpretatsiya/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">18.05.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/proverka-skannerami-oshibki-interpretatsiya/" target="_blank">Проверка сканерами. Интерпретация данных</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Почему SEO-сканеры выдают сотни «критических ошибок», половина из которых — ложные. Разбор на реальных примерах с сайта.
+            </div>
+            <a href="https://b2btext.ru/blog/proverka-skannerami-oshibki-interpretatsiya/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 05 === -->
         <li>
-            <span class="article-date">10.05.2026</span>
-            <span class="article-title">Карточки товаров в B2B. Почему не работает</span>
-            <a href="https://b2btext.ru/blog/kartochki-tovarov-v-b2b-pochemu-ne-rabotaet/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">10.05.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/kartochki-tovarov-v-b2b-pochemu-ne-rabotaet/" target="_blank">Карточки товаров в B2B. Почему не работает</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Почему переписывание ГОСТов и сухих характеристик не продаёт оборудование. Разбор типичных ошибок и готовый шаблон рабочей карточки товара для B2B.
+            </div>
+            <a href="https://b2btext.ru/blog/kartochki-tovarov-v-b2b-pochemu-ne-rabotaet/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 04 === -->
         <li>
-            <span class="article-date">04.05.2026</span>
-            <span class="article-title">Как НЕ надо писать про промышленный маркетинг</span>
-            <a href="https://b2btext.ru/blog/kak-ne-nado-pisat-pro-promyshlennyj-marketing/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">04.05.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/kak-ne-nado-pisat-pro-promyshlennyj-marketing/" target="_blank">Как НЕ надо писать про промышленный маркетинг</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Почему статьи про промышленный маркетинг не имеют ничего общего с реальностью. Красивая академическая теория — и то, что происходит на заводе.
+            </div>
+            <a href="https://b2btext.ru/blog/kak-ne-nado-pisat-pro-promyshlennyj-marketing/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 03 === -->
         <li>
-            <span class="article-date">01.05.2026</span>
-            <span class="article-title">Как снять нагрузку с техподдержки и прокачать SEO</span>
-            <a href="https://b2btext.ru/blog/kak-snyat-nagruzku-s-tehpodderzhki-i-prokachat-seo/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">01.05.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/kak-snyat-nagruzku-s-tehpodderzhki-i-prokachat-seo/" target="_blank">Как снять нагрузку с техподдержки и прокачать SEO</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Обоснование внедрения системы знаний в B2B-компании: снимаем 30–70% нагрузки с техподдержки и прокачиваем SEO.
+            </div>
+            <a href="https://b2btext.ru/blog/kak-snyat-nagruzku-s-tehpodderzhki-i-prokachat-seo/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 02 === -->
         <li>
-            <span class="article-date">26.04.2026</span>
-            <span class="article-title">Антифрод в рекламе: защита бюджета или ещё одна «прокладка»?</span>
-            <a href="https://b2btext.ru/blog/antifrod-v-reklame-zashhita-byudzheta-ili-prokladka/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">26.04.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/antifrod-v-reklame-zashhita-byudzheta-ili-prokladka/" target="_blank">Антифрод в рекламе: защита бюджета или ещё одна «прокладка»?</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Антифрод-сервисы обещают защиту от ботов и экономию бюджета. Разбираемся, где на самом деле находится эта защита и почему клик уже оплачен до того, как сработает фильтрация.
+            </div>
+            <a href="https://b2btext.ru/blog/antifrod-v-reklame-zashhita-byudzheta-ili-prokladka/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
+        <!-- === СТАТЬЯ 01 === -->
         <li>
-            <span class="article-date">21.04.2026</span>
-            <span class="article-title">Почему "дешёвое" китайское оборудование — дорогая ошибка</span>
-            <a href="https://b2btext.ru/blog/pochemu-deshevoe-kitajskoe-oborudovanie-dorogaya-oshibka/" class="article-link" target="_blank">Читать →</a>
+            <div class="article-header">
+                <span class="article-date">21.04.2026</span>
+                <span class="article-title">
+                    <a href="https://b2btext.ru/blog/pochemu-deshevoe-kitajskoe-oborudovanie-dorogaya-oshibka/" target="_blank">Почему "дешёвое" китайское оборудование — дорогая ошибка</a>
+                </span>
+            </div>
+            <div class="article-excerpt">
+                Проблемы китайского промышленного оборудования: простои, сервис, запчасти и реальная стоимость владения. Разбор на практике.
+            </div>
+            <a href="https://b2btext.ru/blog/pochemu-deshevoe-kitajskoe-oborudovanie-dorogaya-oshibka/" class="article-link" target="_blank">Читать полностью →</a>
         </li>
 
     </ul>
 
-    <!-- Ссылка на главную -->
+    <!-- ===== ССЫЛКА НА ГЛАВНУЮ (не трогать) ===== -->
     <a href="/" class="back-link fade-in">← На главную</a>
 
 </div>
 
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109971967', 'ym');
-
-    ym(109971967, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109971967" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-    
 </body>
 </html>
