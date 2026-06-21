@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Анонсы статей — VacuumLab</title>
+
+    <meta name="description" content="Анонсы статей из блога B2Btext.ru: технический копирайтинг, SEO, промышленность." />
+    <meta name="robots" content="index, follow" />
+
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СБРОСЫ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0f0e12;
+            color: #d1d5db;
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ===== ШАПКА ===== */
+        .brand {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid #22222a;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #f1f5f9;
+            font-family: 'Georgia', serif;
+            text-decoration: none;
+        }
+
+        .brand-name:hover {
+            color: #a78bfa;
+        }
+
+        .brand-year {
+            font-size: 0.7rem;
+            color: #4a4a55;
+            background: #1a1a22;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            border: 1px solid #2a2a35;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== ЗАГОЛОВОК СТРАНИЦЫ ===== */
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            color: #f1f5f9;
+        }
+
+        .page-title .highlight {
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #8a8a9a;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid #a78bfa;
+            padding-left: 1rem;
+        }
+
+        /* ===== СПИСОК СТАТЕЙ ===== */
+        .articles-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .articles-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #1a1a22;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 1rem;
+        }
+
+        .articles-list li:last-child {
+            border-bottom: none;
+        }
+
+        .article-date {
+            color: #64748b;
+            font-size: 0.8rem;
+            min-width: 85px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .article-title {
+            color: #e2e8f0;
+            font-size: 1rem;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .article-link {
+            color: #93bbfc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .article-link:hover {
+            color: #b8d4ff;
+            text-decoration: underline;
+        }
+
+        /* ===== ССЫЛКА НА ГЛАВНУЮ ===== */
+        .back-link {
+            display: inline-block;
+            margin-top: 2.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #1a1a22;
+            color: #6a6a7a;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            color: #a78bfa;
+        }
+
+        /* ===== МОБИЛКА ===== */
+        @media (max-width: 600px) {
+            body {
+                padding: 1.2rem;
+                justify-content: flex-start;
+                padding-top: 2rem;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .articles-list li {
+                flex-direction: column;
+                gap: 0.2rem;
+                padding: 0.6rem 0;
+            }
+
+            .article-date {
+                min-width: auto;
+                font-size: 0.7rem;
+            }
+
+            .article-title {
+                font-size: 0.95rem;
+            }
+
+            .article-link {
+                font-size: 0.8rem;
+                align-self: flex-start;
+            }
+        }
+
+        /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
+        .fade-in {
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .fade-in:nth-child(2) { animation-delay: 0.1s; }
+        .fade-in:nth-child(3) { animation-delay: 0.2s; }
+        .fade-in:nth-child(4) { animation-delay: 0.3s; }
+        .fade-in:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Шапка -->
+    <header class="brand fade-in">
+        <a href="/" class="brand-name">VacuumLab</a>
+        <span class="brand-year">с 2013</span>
+    </header>
+
+    <!-- Заголовок страницы -->
+    <h1 class="page-title fade-in">
+        Анонсы статей из <span class="highlight">B2Btext</span>
+    </h1>
+    <p class="page-subtitle fade-in">
+        Коротко о том, что появилось в основном блоге
+    </p>
+
+    <!-- Список статей -->
+    <ul class="articles-list fade-in">
+
+        <li>
+            <span class="article-date">21.06.2026</span>
+            <span class="article-title">Агентства комплексного маркетинга в промышленности</span>
+            <a href="https://b2btext.ru/blog/agentstva-kompleksnogo-marketinga-v-promyshlennosti/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">14.06.2026</span>
+            <span class="article-title">Защита контента от ИИ-ботов</span>
+            <a href="https://b2btext.ru/blog/zashchita-kontenta-ot-ii-botov-2026/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">07.06.2026</span>
+            <span class="article-title">НДС 22%: как мы убиваем малое машиностроение</span>
+            <a href="https://b2btext.ru/blog/nds-22-kak-my-svoimi-rukami-ubivaem-maloe-mashinostroenie/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">31.05.2026</span>
+            <span class="article-title">Поддержка промышленного каталога статьями</span>
+            <a href="https://b2btext.ru/blog/podderzhka-promyshlennogo-kataloga-statyami/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">18.05.2026</span>
+            <span class="article-title">Проверка сканерами. Интерпретация данных</span>
+            <a href="https://b2btext.ru/blog/proverka-skannerami-oshibki-interpretatsiya/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">10.05.2026</span>
+            <span class="article-title">Карточки товаров в B2B. Почему не работает</span>
+            <a href="https://b2btext.ru/blog/kartochki-tovarov-v-b2b-pochemu-ne-rabotaet/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">04.05.2026</span>
+            <span class="article-title">Как НЕ надо писать про промышленный маркетинг</span>
+            <a href="https://b2btext.ru/blog/kak-ne-nado-pisat-pro-promyshlennyj-marketing/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">01.05.2026</span>
+            <span class="article-title">Как снять нагрузку с техподдержки и прокачать SEO</span>
+            <a href="https://b2btext.ru/blog/kak-snyat-nagruzku-s-tehpodderzhki-i-prokachat-seo/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">26.04.2026</span>
+            <span class="article-title">Антифрод в рекламе: защита бюджета или ещё одна «прокладка»?</span>
+            <a href="https://b2btext.ru/blog/antifrod-v-reklame-zashhita-byudzheta-ili-prokladka/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+        <li>
+            <span class="article-date">21.04.2026</span>
+            <span class="article-title">Почему "дешёвое" китайское оборудование — дорогая ошибка</span>
+            <a href="https://b2btext.ru/blog/pochemu-deshevoe-kitajskoe-oborudovanie-dorogaya-oshibka/" class="article-link" target="_blank">Читать →</a>
+        </li>
+
+    </ul>
+
+    <!-- Ссылка на главную -->
+    <a href="/" class="back-link fade-in">← На главную</a>
+
+</div>
+
+</body>
+</html>
