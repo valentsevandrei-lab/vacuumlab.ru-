@@ -91,6 +91,9 @@ Disallow: /
 User-agent: *
 Allow: /
 
+# === Ссылка на карту для AI-агентов ===
+# llms: /llms.txt
+
 Sitemap: https://vacuumlab.ru/sitemap.xml
 
 # =============================================
