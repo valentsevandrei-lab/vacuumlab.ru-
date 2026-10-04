@@ -3,7 +3,7 @@ name: Generate RSS and Sitemap
 on:
   push:
     branches:
-      - main  # Если ваша главная ветка называется master, замените main на master
+      - main  
     paths:
       - 'blog/**'
       - 'index.html'
