@@ -23,6 +23,7 @@ jobs:
           node-version: 20
 
       # --- ШАГ 1: БЕЗОПАСНОЕ СОЗДАНИЕ СКРИПТА ---
+      # Полностью экранируем спецсимволы XML, беря только строковые группы [1]
       - name: Create RSS Script File
         run: |
           echo "const fs = require('fs');" >> script.js
@@ -39,12 +40,12 @@ jobs:
           echo "    const tMatch = html.match(/<title>([^<]+)<\/title>/);" >> script.js
           echo "    const dMatch = html.match(/<meta name=\"description\" content=\"([^\"]+)\"/);" >> script.js
           echo "    const dateMatch = html.match(/datetime=\"([^\"]+)\"/);" >> script.js
-          echo "    if (tMatch) {" >> script.js
-          echo "      const title = tMatch[1].replace(/&/g, '&amp;');" >> script.js
-          echo "      const desc = dMatch ? dMatch[1].replace(/&/g, '&amp;') : '';" >> script.js
+          echo "    if (tMatch && tMatch[1]) {" >> script.js
+          echo "      const title = tMatch[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');" >> script.js
+          echo "      const desc = (dMatch && dMatch[1]) ? dMatch[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';" >> script.js
           echo "      const url = SITE_URL + '/blog/' + f + '/';" >> script.js
           echo "      let pDate = '';" >> script.js
-          echo "      if (dateMatch) {" >> script.js
+          echo "      if (dateMatch && dateMatch[1]) {" >> script.js
           echo "        const d = new Date(dateMatch[1]);" >> script.js
           echo "        if (!isNaN(d.getTime())) pDate = '<pubDate>' + d.toUTCString() + '</pubDate>';" >> script.js
           echo "      }" >> script.js
@@ -70,7 +71,7 @@ jobs:
       - name: Commit and Push updates
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.email "github-actions[bot]@://github.com"
           git add rss.xml sitemap.xml
           git diff-index --quiet HEAD || git commit -m "🤖 Auto-generated RSS and Sitemap"
           git push
