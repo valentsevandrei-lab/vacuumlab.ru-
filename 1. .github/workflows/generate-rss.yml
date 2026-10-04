@@ -1,9 +1,9 @@
-name: Generate RSS Feed
+name: Generate RSS and Sitemap
 
 on:
   push:
     branches:
-      - main  # или master, смотря какая ветка главная
+      - main  # Если ваша главная ветка называется master, замените main на master
     paths:
       - 'blog/**'
       - 'index.html'
@@ -18,15 +18,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-size: 20
+          node-version: 20
 
+      # --- ШАГ 1: ГЕНЕРАЦИЯ RSS ---
+      # Скрипт парсит папку blog и создает rss.xml
       - name: Run RSS Generator Script
         run: |
           node -e "
           const fs = require('fs');
           const path = require('path');
           
-          // Конфиг вашего блога
           const SITE_URL = 'https://vacuumlab.ru';
           const BLOG_DIR = path.join(process.cwd(), 'blog');
           
@@ -35,7 +36,6 @@ jobs:
             process.exit(0);
           }
 
-          // Читаем все папки/файлы в блоге
           const files = fs.readdirSync(BLOG_DIR);
           let itemsXml = '';
 
@@ -44,15 +44,22 @@ jobs:
             if (fs.existsSync(filePath)) {
               const html = fs.readFileSync(filePath, 'utf8');
               
-              // Вытягиваем заголовок, описание и дату через простейшие регулярки
               const titleMatch = html.match(/<title>([^<]+)<\/title>/);
               const descMatch = html.match(/<meta name=\"description\" content=\"([^\"]+)\"/);
+              const dateMatch = html.match(/datetime=\"([^\"]+)\"/);
               
-              // Если в файле есть валидные данные, пишем в RSS
               if (titleMatch) {
                 const title = titleMatch[1].replace(/&/g, '&amp;');
                 const desc = descMatch ? descMatch[1].replace(/&/g, '&amp;') : '';
                 const postUrl = \`\${SITE_URL}/blog/\${file}/\`;
+                
+                let pubDate = '';
+                if (dateMatch) {
+                  const d = new Date(dateMatch[1]);
+                  if (!isNaN(d.getTime())) {
+                    pubDate = \`<pubDate>\${d.toUTCString()}\` + '</pubDate>';
+                  }
+                }
                 
                 itemsXml += \`
                 <item>
@@ -60,12 +67,12 @@ jobs:
                   <link>\${postUrl}</link>
                   <description>\${desc}</description>
                   <guid>\${postUrl}</guid>
+                  \${pubDate}
                 </item>\`;
               }
             }
           });
 
-          // Собираем финальный XML
           const rssXml = \`<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
           <rss version=\"2.0\" xmlns:atom=\"http://w3.org\">
           <channel>
@@ -81,11 +88,20 @@ jobs:
           console.log('RSS успешно сгенерирован!');
           "
 
+      # --- ШАГ 2: ГЕНЕРАЦИЯ SITEMAP.XML ---
+      # Готовый экшен сканирует репозиторий и создает карту сайта
+      - name: Generate Sitemap
+        uses: cicirello/generate-sitemap@v1
+        with:
+          base-url-path: https://vacuumlab.ru
+          include-pdf: false
+
+      # --- ШАГ 3: СОХРАНЕНИЕ ИЗМЕНЕНИЙ В РЕПОЗИТОРИЙ ---
+      # Робот пушит сгенерированные файлы rss.xml и sitemap.xml обратно в корень
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@://github.com"
-          git add rss.xml
-          git diff-index --quiet HEAD || git commit -m "🤖 Auto-generated RSS feed"
+          git add rss.xml sitemap.xml
+          git diff-index --quiet HEAD || git commit -m "🤖 Auto-generated RSS and Sitemap"
           git push
-
