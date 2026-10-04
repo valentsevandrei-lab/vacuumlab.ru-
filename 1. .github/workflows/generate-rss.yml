@@ -17,58 +17,66 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: 20
+          python-version: '3.10'
 
-      # --- ШАГ 1: БЕЗОПАСНОЕ СОЗДАНИЕ СКРИПТА ---
-      # Полностью экранируем спецсимволы XML, беря только строковые группы [1]
-      - name: Create RSS Script File
-        run: |
-          echo "const fs = require('fs');" >> script.js
-          echo "const path = require('path');" >> script.js
-          echo "const SITE_URL = 'https://vacuumlab.ru';" >> script.js
-          echo "const BLOG_DIR = path.join(process.cwd(), 'blog');" >> script.js
-          echo "if (!fs.existsSync(BLOG_DIR)) process.exit(0);" >> script.js
-          echo "const files = fs.readdirSync(BLOG_DIR);" >> script.js
-          echo "let items = '';" >> script.js
-          echo "files.forEach(f => {" >> script.js
-          echo "  const p = path.join(BLOG_DIR, f, 'index.html');" >> script.js
-          echo "  if (fs.existsSync(p)) {" >> script.js
-          echo "    const html = fs.readFileSync(p, 'utf8');" >> script.js
-          echo "    const tMatch = html.match(/<title>([^<]+)<\/title>/);" >> script.js
-          echo "    const dMatch = html.match(/<meta name=\"description\" content=\"([^\"]+)\"/);" >> script.js
-          echo "    const dateMatch = html.match(/datetime=\"([^\"]+)\"/);" >> script.js
-          echo "    if (tMatch && tMatch[1]) {" >> script.js
-          echo "      const title = tMatch[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');" >> script.js
-          echo "      const desc = (dMatch && dMatch[1]) ? dMatch[1].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';" >> script.js
-          echo "      const url = SITE_URL + '/blog/' + f + '/';" >> script.js
-          echo "      let pDate = '';" >> script.js
-          echo "      if (dateMatch && dateMatch[1]) {" >> script.js
-          echo "        const d = new Date(dateMatch[1]);" >> script.js
-          echo "        if (!isNaN(d.getTime())) pDate = '<pubDate>' + d.toUTCString() + '</pubDate>';" >> script.js
-          echo "      }" >> script.js
-          echo "      items += '<item><title>' + title + '</title><link>' + url + '</link><description>' + desc + '</description><guid>' + url + '</guid>' + pDate + '</item>\n';" >> script.js
-          echo "    }" >> script.js
-          echo "  }" >> script.js
-          echo "});" >> script.js
-          echo "const xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Лабораторный журнал — VacuumLab</title><link>' + SITE_URL + '/blog/</link><description>Коротко о новых статьях</description>' + items + '</channel></rss>';" >> script.js
-          echo "fs.writeFileSync('rss.xml', xml);" >> script.js
-
-      # --- ШАГ 2: ВЫПОЛНЕНИЕ СКРИПТА ---
+      # --- ШАГ 1: ГЕНЕРАЦИЯ RSS НА PYTHON ---
+      # Скрипт находит файлы, безопасно вытаскивает теги и экранирует спецсимволы
       - name: Run RSS Generator
-        run: node script.js
+        run: |
+          python -c "
+          import os, re
+          from datetime import datetime
 
-      # --- ШАГ 3: ГЕНЕРАЦИЯ КАРТЫ САЙТА ---
+          site_url = 'https://vacuumlab.ru'
+          blog_dir = os.path.join(os.getcwd(), 'blog')
+          items_xml = []
+
+          if os.path.exists(blog_dir):
+              for folder in os.listdir(blog_dir):
+                  file_path = os.path.join(blog_dir, folder, 'index.html')
+                  if os.path.exists(file_path):
+                      with open(file_path, 'r', encoding='utf-8') as f:
+                          html = f.read()
+                      
+                      title_m = re.search(r'<title>([^<]+)</title>', html)
+                      desc_m = re.search(r'<meta name=\"description\" content=\"([^\"]+)\"', html)
+                      date_m = re.search(r'datetime=\"([^\"]+)\"', html)
+                      
+                      if title_m:
+                          title = title_m.group(1).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                          desc = desc_m.group(1).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;') if desc_m else ''
+                          post_url = f'{site_url}/blog/{folder}/'
+                          
+                          pub_date = ''
+                          if date_m:
+                              try:
+                                  dt = datetime.strptime(date_m.group(1), '%Y-%m-%d')
+                                  pub_date = f'<pubDate>{dt.strftime(\"%a, %d %b %Y %H:%M:%S GMT\")}</pubDate>'
+                              except:
+                                  pass
+                          
+                          item = f'<item><title>{title}</title><link>{post_url}</link><description>{desc}</description><guid>{post_url}</guid>{pub_date}</item>'
+                          items_xml.append(item)
+
+          xml_content = f'<?xml version=\"1.0\" encoding=\"UTF-8\" ?><rss version=\"2.0\" xmlns:atom=\"http://w3.org\"><channel><title>Лабораторный журнал — VacuumLab</title><link>{site_url}/blog/</link><description>Коротко о новых статьях и лабораторный журнал проекта</description><atom:link href=\"{site_url}/rss.xml\" rel=\"self\" type=\"application/rss+xml\" />' + '\n'.join(items_xml) + '</channel></rss>'
+          
+          with open('rss.xml', 'w', encoding='utf-8') as f:
+              f.write(xml_content)
+          print('RSS успешно сгенерирован!')
+          "
+
+      # --- ШАГ 2: ГЕНЕРАЦИЯ SITEMAP.XML ---
       - name: Generate Sitemap
         uses: cicirello/generate-sitemap@v1
         with:
           base-url-path: https://vacuumlab.ru
           include-pdf: false
 
-      # --- ШАГ 4: ПУШ ФАЙЛОВ НА САЙТ ---
-      - name: Commit and Push updates
+      # --- ШАГ 3: ПУШ ФАЙЛОВ НА САЙТ ---
+      - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@://github.com"
