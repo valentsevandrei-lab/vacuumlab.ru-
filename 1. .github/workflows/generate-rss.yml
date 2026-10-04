@@ -22,86 +22,52 @@ jobs:
         with:
           node-version: 20
 
-      # --- ШАГ 1: ГЕНЕРАЦИЯ RSS ---
-      # Создаем временный JS-файл, чтобы избежать конфликта кавычек в терминале Linux
-      - name: Create RSS Generator Script
+      # --- ШАГ 1: БЕЗОПАСНОЕ СОЗДАНИЕ СКРИПТА ---
+      - name: Create RSS Script File
         run: |
-          cat << 'EOF' > generate-rss.js
-          const fs = require('fs');
-          const path = require('path');
-          
-          const SITE_URL = 'https://vacuumlab.ru';
-          const BLOG_DIR = path.join(process.cwd(), 'blog');
-          
-          if (!fs.existsSync(BLOG_DIR)) {
-            console.log('Папка blog не найдена');
-            process.exit(0);
-          }
+          echo "const fs = require('fs');" >> script.js
+          echo "const path = require('path');" >> script.js
+          echo "const SITE_URL = 'https://vacuumlab.ru';" >> script.js
+          echo "const BLOG_DIR = path.join(process.cwd(), 'blog');" >> script.js
+          echo "if (!fs.existsSync(BLOG_DIR)) process.exit(0);" >> script.js
+          echo "const files = fs.readdirSync(BLOG_DIR);" >> script.js
+          echo "let items = '';" >> script.js
+          echo "files.forEach(f => {" >> script.js
+          echo "  const p = path.join(BLOG_DIR, f, 'index.html');" >> script.js
+          echo "  if (fs.existsSync(p)) {" >> script.js
+          echo "    const html = fs.readFileSync(p, 'utf8');" >> script.js
+          echo "    const tMatch = html.match(/<title>([^<]+)<\/title>/);" >> script.js
+          echo "    const dMatch = html.match(/<meta name=\"description\" content=\"([^\"]+)\"/);" >> script.js
+          echo "    const dateMatch = html.match(/datetime=\"([^\"]+)\"/);" >> script.js
+          echo "    if (tMatch) {" >> script.js
+          echo "      const title = tMatch[1].replace(/&/g, '&amp;');" >> script.js
+          echo "      const desc = dMatch ? dMatch[1].replace(/&/g, '&amp;') : '';" >> script.js
+          echo "      const url = SITE_URL + '/blog/' + f + '/';" >> script.js
+          echo "      let pDate = '';" >> script.js
+          echo "      if (dateMatch) {" >> script.js
+          echo "        const d = new Date(dateMatch[1]);" >> script.js
+          echo "        if (!isNaN(d.getTime())) pDate = '<pubDate>' + d.toUTCString() + '</pubDate>';" >> script.js
+          echo "      }" >> script.js
+          echo "      items += '<item><title>' + title + '</title><link>' + url + '</link><description>' + desc + '</description><guid>' + url + '</guid>' + pDate + '</item>\n';" >> script.js
+          echo "    }" >> script.js
+          echo "  }" >> script.js
+          echo "});" >> script.js
+          echo "const xml = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Лабораторный журнал — VacuumLab</title><link>' + SITE_URL + '/blog/</link><description>Коротко о новых статьях</description>' + items + '</channel></rss>';" >> script.js
+          echo "fs.writeFileSync('rss.xml', xml);" >> script.js
 
-          const files = fs.readdirSync(BLOG_DIR);
-          let itemsXml = '';
+      # --- ШАГ 2: ВЫПОЛНЕНИЕ СКРИПТА ---
+      - name: Run RSS Generator
+        run: node script.js
 
-          files.forEach(file => {
-            const filePath = path.join(BLOG_DIR, file, 'index.html');
-            if (fs.existsSync(filePath)) {
-              const html = fs.readFileSync(filePath, 'utf8');
-              
-              const titleMatch = html.match(/<title>([^<]+)<\/title>/);
-              const descMatch = html.match(/<meta name="description" content="([^"]+)"/);
-              const dateMatch = html.match(/datetime="([^"]+)"/);
-              
-              if (titleMatch && titleMatch[1]) {
-                const title = titleMatch[1].replace(/&/g, '&amp;');
-                const desc = (descMatch && descMatch[1]) ? descMatch[1].replace(/&/g, '&amp;') : '';
-                const postUrl = `${SITE_URL}/blog/${file}/`;
-                
-                let pubDate = '';
-                if (dateMatch && dateMatch[1]) {
-                  const d = new Date(dateMatch[1]);
-                  if (!isNaN(d.getTime())) {
-                    pubDate = `<pubDate>${d.toUTCString()}</pubDate>`;
-                  }
-                }
-                
-                itemsXml += `
-                <item>
-                  <title>${title}</title>
-                  <link>${postUrl}</link>
-                  <description>${desc}</description>
-                  <guid>${postUrl}</guid>
-                  ${pubDate}
-                </item>\n`;
-              }
-            }
-          });
-
-          const rssXml = `<?xml version="1.0" encoding="UTF-8" ?>
-          <rss version="2.0" xmlns:atom="http://w3.org">
-          <channel>
-            <title>Лабораторный журнал — VacuumLab</title>
-            <link>${SITE_URL}/blog/</link>
-            <description>Коротко о новых статьях и лабораторный журнал проекта</description>
-            <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
-            ${itemsXml}
-          </channel>
-          </rss>`;
-
-          fs.writeFileSync(path.join(process.cwd(), 'rss.xml'), rssXml);
-          console.log('RSS успешно сгенерирован!');
-          EOF
-
-      - name: Execute RSS Script
-        run: node generate-rss.js
-
-      # --- ШАГ 2: ГЕНЕРАЦИЯ SITEMAP.XML ---
+      # --- ШАГ 3: ГЕНЕРАЦИЯ КАРТЫ САЙТА ---
       - name: Generate Sitemap
         uses: cicirello/generate-sitemap@v1
         with:
           base-url-path: https://vacuumlab.ru
           include-pdf: false
 
-      # --- ШАГ 3: СОХРАНЕНИЕ ИЗМЕНЕНИЙ В РЕПОЗИТОРИЙ ---
-      - name: Commit and Push changes
+      # --- ШАГ 4: ПУШ ФАЙЛОВ НА САЙТ ---
+      - name: Commit and Push updates
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
