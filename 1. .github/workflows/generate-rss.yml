@@ -23,10 +23,10 @@ jobs:
           node-version: 20
 
       # --- ШАГ 1: ГЕНЕРАЦИЯ RSS ---
-      # Скрипт парсит html-файлы, безопасно вытаскивает строки и собирает rss.xml
-      - name: Run RSS Generator Script
+      # Создаем временный JS-файл, чтобы избежать конфликта кавычек в терминале Linux
+      - name: Create RSS Generator Script
         run: |
-          node -e "
+          cat << 'EOF' > generate-rss.js
           const fs = require('fs');
           const path = require('path');
           
@@ -47,48 +47,51 @@ jobs:
               const html = fs.readFileSync(filePath, 'utf8');
               
               const titleMatch = html.match(/<title>([^<]+)<\/title>/);
-              const descMatch = html.match(/<meta name=\"description\" content=\"([^\"]+)\"/);
-              const dateMatch = html.match(/datetime=\"([^\"]+)\"/);
+              const descMatch = html.match(/<meta name="description" content="([^"]+)"/);
+              const dateMatch = html.match(/datetime="([^"]+)"/);
               
               if (titleMatch && titleMatch[1]) {
                 const title = titleMatch[1].replace(/&/g, '&amp;');
                 const desc = (descMatch && descMatch[1]) ? descMatch[1].replace(/&/g, '&amp;') : '';
-                const postUrl = \`\${SITE_URL}/blog/\${file}/\`;
+                const postUrl = `${SITE_URL}/blog/${file}/`;
                 
                 let pubDate = '';
                 if (dateMatch && dateMatch[1]) {
                   const d = new Date(dateMatch[1]);
                   if (!isNaN(d.getTime())) {
-                    pubDate = \`<pubDate>\${d.toUTCString()}\` + '</pubDate>';
+                    pubDate = `<pubDate>${d.toUTCString()}</pubDate>`;
                   }
                 }
                 
-                itemsXml += \`
+                itemsXml += `
                 <item>
-                  <title>\${title}</title>
-                  <link>\${postUrl}</link>
-                  <description>\${desc}</description>
-                  <guid>\${postUrl}</guid>
-                  \${pubDate}
-                </item>\`;
+                  <title>${title}</title>
+                  <link>${postUrl}</link>
+                  <description>${desc}</description>
+                  <guid>${postUrl}</guid>
+                  ${pubDate}
+                </item>\n`;
               }
             }
           });
 
-          const rssXml = \`<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-          <rss version=\"2.0\" xmlns:atom=\"http://w3.org\">
+          const rssXml = `<?xml version="1.0" encoding="UTF-8" ?>
+          <rss version="2.0" xmlns:atom="http://w3.org">
           <channel>
             <title>Лабораторный журнал — VacuumLab</title>
-            <link>\${SITE_URL}/blog/</link>
+            <link>${SITE_URL}/blog/</link>
             <description>Коротко о новых статьях и лабораторный журнал проекта</description>
-            <atom:link href=\"\${SITE_URL}/rss.xml\" rel=\"self\" type=\"application/rss+xml\" />
-            \${itemsXml}
+            <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
+            ${itemsXml}
           </channel>
-          </rss>\`;
+          </rss>`;
 
           fs.writeFileSync(path.join(process.cwd(), 'rss.xml'), rssXml);
           console.log('RSS успешно сгенерирован!');
-          "
+          EOF
+
+      - name: Execute RSS Script
+        run: node generate-rss.js
 
       # --- ШАГ 2: ГЕНЕРАЦИЯ SITEMAP.XML ---
       - name: Generate Sitemap
@@ -101,7 +104,7 @@ jobs:
       - name: Commit and Push changes
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@://github.com"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add rss.xml sitemap.xml
           git diff-index --quiet HEAD || git commit -m "🤖 Auto-generated RSS and Sitemap"
           git push
