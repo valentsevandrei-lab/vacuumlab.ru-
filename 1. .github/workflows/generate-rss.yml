@@ -1,1 +1,91 @@
+name: Generate RSS Feed
+
+on:
+  push:
+    branches:
+      - main  # или master, смотря какая ветка главная
+    paths:
+      - 'blog/**'
+      - 'index.html'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-size: 20
+
+      - name: Run RSS Generator Script
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Конфиг вашего блога
+          const SITE_URL = 'https://vacuumlab.ru';
+          const BLOG_DIR = path.join(process.cwd(), 'blog');
+          
+          if (!fs.existsSync(BLOG_DIR)) {
+            console.log('Папка blog не найдена');
+            process.exit(0);
+          }
+
+          // Читаем все папки/файлы в блоге
+          const files = fs.readdirSync(BLOG_DIR);
+          let itemsXml = '';
+
+          files.forEach(file => {
+            const filePath = path.join(BLOG_DIR, file, 'index.html');
+            if (fs.existsSync(filePath)) {
+              const html = fs.readFileSync(filePath, 'utf8');
+              
+              // Вытягиваем заголовок, описание и дату через простейшие регулярки
+              const titleMatch = html.match(/<title>([^<]+)<\/title>/);
+              const descMatch = html.match(/<meta name=\"description\" content=\"([^\"]+)\"/);
+              
+              // Если в файле есть валидные данные, пишем в RSS
+              if (titleMatch) {
+                const title = titleMatch[1].replace(/&/g, '&amp;');
+                const desc = descMatch ? descMatch[1].replace(/&/g, '&amp;') : '';
+                const postUrl = \`\${SITE_URL}/blog/\${file}/\`;
+                
+                itemsXml += \`
+                <item>
+                  <title>\${title}</title>
+                  <link>\${postUrl}</link>
+                  <description>\${desc}</description>
+                  <guid>\${postUrl}</guid>
+                </item>\`;
+              }
+            }
+          });
+
+          // Собираем финальный XML
+          const rssXml = \`<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+          <rss version=\"2.0\" xmlns:atom=\"http://w3.org\">
+          <channel>
+            <title>Лабораторный журнал — VacuumLab</title>
+            <link>\${SITE_URL}/blog/</link>
+            <description>Коротко о новых статьях и лабораторный журнал проекта</description>
+            <atom:link href=\"\${SITE_URL}/rss.xml\" rel=\"self\" type=\"application/rss+xml\" />
+            \${itemsXml}
+          </channel>
+          </rss>\`;
+
+          fs.writeFileSync(path.join(process.cwd(), 'rss.xml'), rssXml);
+          console.log('RSS успешно сгенерирован!');
+          "
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          git add rss.xml
+          git diff-index --quiet HEAD || git commit -m "🤖 Auto-generated RSS feed"
+          git push
 
