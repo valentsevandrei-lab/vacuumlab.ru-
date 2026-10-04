@@ -23,6 +23,7 @@ jobs:
           node-version: 20
 
       # --- ШАГ 1: ГЕНЕРАЦИЯ RSS ---
+      # Скрипт парсит html-файлы, безопасно вытаскивает строки и собирает rss.xml
       - name: Run RSS Generator Script
         run: |
           node -e "
